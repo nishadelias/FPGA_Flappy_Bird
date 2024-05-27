@@ -15,7 +15,7 @@ output clk_fast,
  reg clk_game_reg;
  reg clk_fast_reg;
  reg clk_blink_reg;
- parameter DIVISOR_blink = 28'd50000000;  // 1 Hz
+ parameter DIVISOR_blink = 28'd33000000;  // 1.5 Hz
  parameter DIVISOR_game = 28'd1000000;    // 50 Hz
  parameter DIVISOR_fast = 28'd100000;     // 500 Hz
 // parameter DIVISOR_blink = 28'd5;
