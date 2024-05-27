@@ -3,30 +3,30 @@
 module clk_div(
 input clock_in, // 100 MHz master clock, V10 on board
 input rst,
-output clk_slide,
+output clk_blink,
 output clk_game,
 output clk_fast,
 );
  
- reg[27:0] counter_slide=28'd0;
+ reg[27:0] counter_blink=28'd0;
  reg[27:0] counter_game=28'd0;
  reg[27:0] counter_fast=28'd0;
- reg clk_slide_reg;
+ reg clk_blink_reg;
  reg clk_game_reg;
  reg clk_fast_reg;
  reg clk_blink_reg;
- parameter DIVISOR_slide = 28'd12500000;  // 4 Hz
+ parameter DIVISOR_blink = 28'd50000000;  // 1 Hz
  parameter DIVISOR_game = 28'd1000000;    // 50 Hz
  parameter DIVISOR_fast = 28'd100000;     // 500 Hz
-// parameter DIVISOR_slide = 28'd5;
+// parameter DIVISOR_blink = 28'd5;
 // parameter DIVISOR_game = 28'd10;
 // parameter DIVISOR_fast = 28'd2;
 
  initial begin
-counter_slide <= 0;
+counter_blink <= 0;
  counter_game <= 0;
  counter_fast <= 0;
- clk_slide_reg <= 0;
+ clk_blink_reg <= 0;
  clk_game_reg <= 0;
  clk_fast_reg <= 0;
  end
@@ -35,14 +35,14 @@ counter_slide <= 0;
  always @(posedge clock_in)
 begin
   //Increment counters
-  counter_slide <= counter_slide + 28'd1;
+  counter_blink <= counter_blink + 28'd1;
   counter_game <= counter_game + 28'd1;
   counter_fast <= counter_fast + 28'd1;
    
    // Generate clock outputs based on counters
-   if (counter_slide == DIVISOR_slide) begin
-       clk_slide_reg <= ~clk_slide_reg;
-       counter_slide <= 0;
+   if (counter_blink == DIVISOR_blink) begin
+       clk_blink_reg <= ~clk_blink_reg;
+       counter_blink <= 0;
    end
    if (counter_game == DIVISOR_game) begin
        clk_game_reg <= ~clk_game_reg;
@@ -54,7 +54,7 @@ begin
    end
  end
  
- assign clk_slide = clk_slide_reg;
+ assign clk_blink = clk_blink_reg;
  assign clk_game = clk_game_reg;
  assign clk_fast = clk_fast_reg;
  
