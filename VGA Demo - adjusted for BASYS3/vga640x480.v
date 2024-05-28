@@ -97,15 +97,18 @@ assign vsync = (vc < vpulse) ? 0:1;
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(*)
 begin
-	// Within vertical active video range
+    // Define the reg values for computation coordinates
+    reg [9:0] square_left = 270;
+    reg [9:0] square_right = 320;
+    reg [9:0] square_top = 215;
+    reg [9:0] square_bottom = 265;
+
+    // Within vertical active video range
     if (vc >= vbp && vc < vfp)
     begin
-        // Calculate the screen row and column for active video
-        int active_hc = hc - hbp;
-        int active_vc = vc - vbp;
-
         // Check if we're within the square's horizontal & vertical range
-        if (active_hc >= 270 && active_hc < 320 && active_vc >= 215 && active_vc < 265)
+        if (hc >= (hbp + square_left) && hc < (hbp + square_right) && 
+            vc >= (vbp + square_top) && vc < (vbp + square_bottom))
         begin
             // Inside the square
             red = 3'b111;   // Red component of yellow
@@ -127,5 +130,5 @@ begin
         green = 3'b110;
         blue = 3'b110;
     end
-
+end
 endmodule
