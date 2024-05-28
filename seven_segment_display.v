@@ -52,22 +52,22 @@ module seven_segment_display(
             if (Anode_Activate == 4'b0111) begin
                 LED_out = 7'b1111111;
             end else if (Anode_Activate == 4'b1011) begin
-                // Y
+                LED_out = 7'b1001100;
             end else if (Anode_Activate = 4'b1101) begin
-                // O
+                LED_out = 7'b1111110;
             end else begin
-                // U
+                LED_out = 7'b0111110;
             end
         end else if (blink_counter == 2) begin
             // display LOSE
             if (Anode_Activate == 4'b0111) begin
-                // L
+                LED_out = 7'b1110001;
             end else if (Anode_Activate == 4'b1011) begin
-                // O
+                LED_out = 7'b1111110;
             end else if (Anode_Activate = 4'b1101) begin
-                // S
+                LED_out = 7'b0100100;
             end else begin
-                // E
+                LED_out = 7'b0110000;
             end
         end else begin
             LED_out = 7'b1111111;
