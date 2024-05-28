@@ -97,38 +97,83 @@ assign vsync = (vc < vpulse) ? 0:1;
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(*)
 begin
-    // Define the reg values for computation coordinates
-    reg [9:0] square_left = 270;
-    reg [9:0] square_right = 320;
-    reg [9:0] square_top = 215;
-    reg [9:0] square_bottom = 265;
-
-    // Within vertical active video range
-    if (vc >= vbp && vc < vfp)
-    begin
-        // Check if we're within the square's horizontal & vertical range
-        if (hc >= (hbp + square_left) && hc < (hbp + square_right) && 
-            vc >= (vbp + square_top) && vc < (vbp + square_bottom))
-        begin
-            // Inside the square
-            red = 3'b111;   // Red component of yellow
-            green = 3'b111; // Green component of yellow
-            blue = 3'b000;  // Blue component of yellow
-        end
-        else
-        begin
-            // Outside the square, fill the rest with light blue
-            red = 3'b000;
-            green = 3'b110;
-            blue = 3'b110;
-        end
-    end
-    // Outside vertical active range, fill with light blue
-    else
-    begin
-        red = 3'b000;
-        green = 3'b110;
-        blue = 3'b110;
-    end
+	// first check if we're within vertical active video range
+	if (vc >= vbp && vc < vfp)
+	begin
+		// now display different colors every 80 pixels
+		// while we're within the active horizontal range
+		// -----------------
+		// display white bar
+		if (hc >= hbp && hc < (hbp+80))
+		begin
+			red = 3'b111;
+			green = 3'b111;
+			blue = 3'b111;
+		end
+		// display yellow bar
+		else if (hc >= (hbp+80) && hc < (hbp+160))
+		begin
+			red = 3'b111;
+			green = 3'b111;
+			blue = 3'b000;
+		end
+		// display cyan bar
+		else if (hc >= (hbp+160) && hc < (hbp+240))
+		begin
+			red = 3'b000;
+			green = 3'b111;
+			blue = 3'b111;
+		end
+		// display green bar
+		else if (hc >= (hbp+240) && hc < (hbp+320))
+		begin
+			red = 3'b000;
+			green = 3'b111;
+			blue = 3'b000;
+		end
+		// display magenta bar
+		else if (hc >= (hbp+320) && hc < (hbp+400))
+		begin
+			red = 3'b111;
+			green = 3'b000;
+			blue = 3'b111;
+		end
+		// display red bar
+		else if (hc >= (hbp+400) && hc < (hbp+480))
+		begin
+			red = 3'b111;
+			green = 3'b000;
+			blue = 3'b000;
+		end
+		// display blue bar
+		else if (hc >= (hbp+480) && hc < (hbp+560))
+		begin
+			red = 3'b000;
+			green = 3'b000;
+			blue = 3'b111;
+		end
+		// display black bar
+		else if (hc >= (hbp+560) && hc < (hbp+640))
+		begin
+			red = 4'b000;
+			green = 4'b000;
+			blue = 4'b000;
+		end
+		// we're outside active horizontal range so display black
+		else
+		begin
+			red = 0;
+			green = 0;
+			blue = 0;
+		end
+	end
+	// we're outside active vertical range so display black
+	else
+	begin
+		red = 0;
+		green = 0;
+		blue = 0;
+	end
 end
+
 endmodule
