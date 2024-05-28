@@ -21,6 +21,9 @@
 module vga640x480(
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
+	input bird_x,
+	input bird_y,
+	input game_state,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
@@ -104,61 +107,36 @@ begin
 		// while we're within the active horizontal range
 		// -----------------
 		// display white bar
-		if (hc >= hbp && hc < (hbp+80))
+		if (hc >= hbp && hc < (hbp+140))
 		begin
-			red = 3'b111;
-			green = 3'b111;
+			red = 3'b000;
+			green = 3'b100;
 			blue = 3'b111;
 		end
 		// display yellow bar
-		else if (hc >= (hbp+80) && hc < (hbp+160))
+		else if (hc >= (hbp+140) && hc < (hbp+160))
 		begin
+		  if (vc >= (vbp+240) && vc < (vbp+260))
+		  begin
 			red = 3'b111;
 			green = 3'b111;
 			blue = 3'b000;
+		  end else
+		  begin
+		      red = 3'b000;
+              green = 3'b100;
+              blue = 3'b111;
+          end
 		end
-		// display cyan bar
-		else if (hc >= (hbp+160) && hc < (hbp+240))
-		begin
-			red = 3'b000;
-			green = 3'b111;
-			blue = 3'b111;
-		end
-		// display green bar
-		else if (hc >= (hbp+240) && hc < (hbp+320))
-		begin
-			red = 3'b000;
-			green = 3'b111;
-			blue = 3'b000;
-		end
-		// display magenta bar
-		else if (hc >= (hbp+320) && hc < (hbp+400))
-		begin
-			red = 3'b111;
-			green = 3'b000;
-			blue = 3'b111;
-		end
-		// display red bar
-		else if (hc >= (hbp+400) && hc < (hbp+480))
-		begin
-			red = 3'b111;
-			green = 3'b000;
-			blue = 3'b000;
-		end
+		
 		// display blue bar
-		else if (hc >= (hbp+480) && hc < (hbp+560))
+		else if (hc >= (hbp+160) && hc < (hbp+640))
 		begin
 			red = 3'b000;
-			green = 3'b000;
+			green = 3'b100;
 			blue = 3'b111;
 		end
-		// display black bar
-		else if (hc >= (hbp+560) && hc < (hbp+640))
-		begin
-			red = 4'b000;
-			green = 4'b000;
-			blue = 4'b000;
-		end
+		
 		// we're outside active horizontal range so display black
 		else
 		begin
