@@ -36,6 +36,8 @@ wire segclk;
 
 // VGA display clock interconnect
 wire dclk;
+wire clk_blink;
+wire clk_game;
 
 // disable the 7-segment decimal points
 assign dp = 1;
@@ -45,7 +47,9 @@ clockdiv U1(
 	.clk(clk),
 	.clr(clr),
 	.segclk(segclk),
-	.dclk(dclk)
+	.dclk(dclk),
+	.clk_blink(clk_blink),
+	.clk_game(clk_game)
 	);
 
 // 7-segment display controller
