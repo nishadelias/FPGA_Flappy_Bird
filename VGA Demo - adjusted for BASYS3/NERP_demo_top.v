@@ -28,14 +28,14 @@ module NERP_demo_top(
 	output wire [2:0] green,//green vga output - 3 bits
 	output wire [2:0] blue,	//blue vga output - 3 bits
 	output wire hsync,		//horizontal sync out
-	output wire vsync			//vertical sync out
+	output wire vsync, //vertical sync out
+	output wire dclk,
 	);
 
 // 7-segment clock interconnect
 wire segclk;
 
 // VGA display clock interconnect
-wire dclk;
 wire clk_blink;
 wire clk_game;
 
