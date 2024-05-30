@@ -42,6 +42,15 @@ wire clk_game;
 // disable the 7-segment decimal points
 assign dp = 1;
 
+wire flap(),
+reg paused = 0;
+wire reset = 0;
+reg game_state = 0;
+reg [9:0] current_score = 0;
+reg [9:0] highest_score = 0;
+reg [7:0] bird_x;
+reg [8:0] bird_y;
+
 // generate 7-segment clock & display clock
 clockdiv U1(
 	.clk(clk),
@@ -70,5 +79,22 @@ vga640x480 U3(
 	.green(green),
 	.blue(blue)
 	);
+
+game U4(
+	.clock(clk_game),  // 50 Hz
+	.flap(flap),
+	.pause(pause),
+	.reset(reset),
+	.game_state(game_state),
+	.current_score(current_score),
+	.highest_score(highest_score),
+	.bird_x(bird_x),
+	.bird_y(bird(y)
+);
+
+initial begin
+	game_state <=0;
+	#1_000_000_000
+	
 
 endmodule
