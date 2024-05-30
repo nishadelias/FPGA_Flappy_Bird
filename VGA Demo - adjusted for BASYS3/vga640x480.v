@@ -107,16 +107,16 @@ begin
 		// while we're within the active horizontal range
 		// -----------------
 		// display white bar
-		if (hc >= hbp && hc < (hbp+140))
+		if (hc >= hbp && hc < (hbp+bird_x))
 		begin
 			red = 3'b000;
 			green = 3'b100;
 			blue = 3'b111;
 		end
 		// display yellow bar
-		else if (hc >= (hbp+140) && hc < (hbp+160))
+		else if (hc >= (hbp+bird_x) && hc < (hbp+bird_x+20))
 		begin
-		  if (vc >= (vbp+240) && vc < (vbp+260))
+			if (vc >= (vbp+bird_y) && vc < (vbp+bird_y+20))
 		  begin
 			red = 3'b111;
 			green = 3'b111;
@@ -130,7 +130,7 @@ begin
 		end
 		
 		// display blue bar
-		else if (hc >= (hbp+160) && hc < (hbp+640))
+		else if (hc >= (hbp+bird_x+20) && hc < (hbp+640))
 		begin
 			red = 3'b000;
 			green = 3'b100;
