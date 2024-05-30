@@ -73,6 +73,8 @@ segdisplay U2(
 vga640x480 U3(
 	.dclk(dclk),
 	.clr(clr),
+	.bird_x(bird_x),
+	.bird_y(bird_y),
 	.hsync(hsync),
 	.vsync(vsync),
 	.red(red),
