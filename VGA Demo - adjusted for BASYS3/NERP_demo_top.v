@@ -21,6 +21,8 @@
 module NERP_demo_top(
 	input wire clk,			//master clock = 100MHz
 	input wire clr,			//right-most pushbutton for reset
+	input wire paused,
+	input wire flap_button,
 	output wire [6:0] seg,	//7-segment display LEDs
 	output wire [3:0] an,	//7-segment display anode enable
 	output wire dp,			//7-segment display decimal point
@@ -28,28 +30,28 @@ module NERP_demo_top(
 	output wire [2:0] green,//green vga output - 3 bits
 	output wire [2:0] blue,	//blue vga output - 3 bits
 	output wire hsync,		//horizontal sync out
-	output wire vsync, //vertical sync out
-	output wire dclk,
+	output wire vsync //vertical sync out
+	//output wire dclk
 	);
 
 // 7-segment clock interconnect
 wire segclk;
+wire dclk;
 
 // VGA display clock interconnect
 wire clk_blink;
 wire clk_game;
+reg reset;
+wire game_state;
+wire [9:0] current_score;
+wire [9:0] highest_score;
+wire [9:0] bird_x;
+wire [8:0] bird_y;
 
 // disable the 7-segment decimal points
 assign dp = 1;
 
-wire flap(),
-reg paused = 0;
-wire reset = 0;
-reg game_state = 0;
-reg [9:0] current_score = 0;
-reg [9:0] highest_score = 0;
-reg [7:0] bird_x;
-reg [8:0] bird_y;
+
 
 // generate 7-segment clock & display clock
 clockdiv U1(
@@ -75,6 +77,7 @@ vga640x480 U3(
 	.clr(clr),
 	.bird_x(bird_x),
 	.bird_y(bird_y),
+	.game_state(game_state),
 	.hsync(hsync),
 	.vsync(vsync),
 	.red(red),
@@ -84,37 +87,18 @@ vga640x480 U3(
 
 game U4(
 	.clock(clk_game),  // 50 Hz
-	.flap(flap),
-	.pause(pause),
+	.flap(flap_button),
+	.pause(paused),
 	.reset(reset),
 	.game_state(game_state),
 	.current_score(current_score),
 	.highest_score(highest_score),
 	.bird_x(bird_x),
-	.bird_y(bird(y)
+	.bird_y(bird_y)
 );
 
 initial begin
-	game_state <=0;
-	#1000000000
-	game_state <= 1;
-	flap <= 1;
-	#10000000
-	flap <= 0;
-	#1000000000
-	flap <= 1;
-	#10000000
-	flap <= 0;
-	#1000000000
-	flap <= 1;
-	#10000000
-	flap <= 0;
-	#1000000000
-	flap <= 1;
-	#10000000
-	flap <= 0;
-	#1000000000
+    reset <= 0;
 end
-	
 
 endmodule
