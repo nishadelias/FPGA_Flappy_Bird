@@ -40,17 +40,24 @@ wire clr, pause, flap;
 wire segclk;
 
 // VGA display clock interconnect
-wire dclk;
+wire dclk, gclk, debclk;
+	
+//Bird y coordinate
+wire y;
+	
 
 // disable the 7-segment decimal points
 assign dp = 1;
+
 
 // generate 7-segment clock & display clock
 clockdiv U1(
 	.clk(clk),
 	.clr(clr),
 	.segclk(segclk),
-	.dclk(dclk)
+	.dclk(dclk),
+	.gclk(glk),
+	.deb_clk(debclk)
 	);
 
 // 7-segment display controller
@@ -73,10 +80,15 @@ vga640x480 U3(
 	);
 	
 // Debounced inputs
-debouncer clr_debounce(.clk(clk), .button_in(clr_btn), .button_out(clr));
-debouncer pause_debounce(.clk(clk), .button_in(pause_btn), .button_out(pause));
-debouncer flap_debounce(.clk(clk), .button_in(flap_btn), .button_out(flap));
+debouncer clr_debounce(.clk(debclk), .button_in(clr_btn), .button_out(clr));
+debouncer pause_debounce(.clk(ddbclk), .button_in(pause_btn), .button_out(pause));
+debouncer flap_debounce(.clk(debclk), .button_in(flap_btn), .button_out(flap));
 
 //Game module
+game U4(
+	.clk(clk),
+	.flap(flap),
+	.y(y)
+);
 
 endmodule
