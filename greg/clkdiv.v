@@ -1,33 +1,67 @@
+`timescale 1ns / 1ps
+
 module clockdiv(
-    input wire clk,        // master clock: 100MHz
-    input wire clr,        // asynchronous reset
-    output wire dclk,      // pixel clock: 25MHz
-    output wire segclk,    // 7-segment clock: 381.47Hz
-    output wire clk_blink, // about 1.5Hz
-    output wire clk_game   // about 50Hz
-    );
+	input wire clk,		//master clock: 100MHz
+	input wire clr,		//asynchronous reset
+	output wire dclk,		//pixel clock: 25MHz
+	output wire segclk,	//7-segment clock: 381.47Hz
+  	output wire gclk
+	);
 
-// Counter variables
- reg [25:0] q;
+// 17-bit counter variable
+  reg[27:0] counter_dclk=28'd0;
+  reg[27:0] counter_segclk=28'd0;
+  reg[27:0] counter_gclk=28'd0;
+  reg dclk_reg;
+  reg segclk_reg;
+  reg gclk_reg;
+  parameter DIVISOR_dclk = 28'd4; //TESTBENCH VALUESS!!!!!!!!!
+  parameter DIVISOR_segclk = 28'd10;
+  parameter DIVISOR_gclk = 28'd10;
 
+ initial begin
+ counter_dclk <= 0;
+ counter_segclk <= 0;
+ counter_gclk <= 0;
+ dclk_reg <= 0;
+ segclk_reg <= 0;
+ gclk_reg <= 0;
+ end
 
-// Always block for master counter
+// Clock divider --
+// Each bit in q is a clock signal that is
+// only a fraction of the master clock.
 always @(posedge clk or posedge clr)
 begin
-    if (clr)
-    begin
-        q <= 0;
+	// reset condition
+  if (clr == 1) begin
+		dclk_reg <= 0;
+  		segclk_reg <= 0;
+    	gclk_reg <= 0;
+  end
+	else begin
+		counter_dclk <= counter_dclk +28'd1;
+        counter_segclk <= counter_segclk + 28'd1;
+      	counter_gclk <= counter_gclk + 28'd1;
     end
-    else
-    begin
-        q <= q + 1;
-    end
+  //Divide
+  if (counter_dclk == DIVISOR_dclk) begin
+       dclk_reg <= ~dclk_reg;
+       counter_dclk <= 0;
+   end
+  if (counter_segclk == DIVISOR_segclk) begin
+       segclk_reg <= ~segclk_reg;
+       counter_segclk <= 0;
+   end
+  if (counter_gclk == DIVISOR_gclk) begin
+       gclk_reg <= ~gclk_reg;
+       counter_gclk <= 0;
+   end
 end
 
-// Clock outputs
-assign segclk = q[17];
-assign dclk = q[2];
-assign clk_blink = q[25];
-assign clk_game = q[20];
+assign gclk = gclk_reg;
+assign segclk = segclk_reg;
+assign dclk = dclk_reg;
+
 
 endmodule
