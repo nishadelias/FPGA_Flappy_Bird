@@ -1,23 +1,12 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    20:28:25 03/19/2013 
-// Design Name: 
-// Module Name:    NERP_demo_top 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+`include "clockdiv.v"
+`include "segdisplay.v"
+`include "vga640x480.v"
+`include "debouncer.v"
+`include "game.v"
+
+
+
 module NERP_demo_top(
 	input wire clk,			//master clock = 100MHz
 	input wire clr_btn,			//right-most pushbutton for reset
@@ -30,7 +19,8 @@ module NERP_demo_top(
 	output wire [2:0] green,//green vga output - 3 bits
 	output wire [2:0] blue,	//blue vga output - 3 bits
 	output wire hsync,		//horizontal sync out
-	output wire vsync			//vertical sync out
+	output wire vsync,		//vertical sync out
+  output wire [8:0] tb_y
 	);
 	
 //Debounced inputs
@@ -40,11 +30,11 @@ wire clr, pause, flap;
 wire segclk;
 
 // VGA display clock interconnect
-wire dclk, gclk, debclk;
+wire dclk, gclk;
 	
 //Bird y coordinate
-wire y;
-	
+wire [8:0] y;
+assign tb_y = y;
 
 // disable the 7-segment decimal points
 assign dp = 1;
@@ -54,10 +44,9 @@ assign dp = 1;
 clockdiv U1(
 	.clk(clk),
 	.clr(clr),
-	.segclk(segclk),
 	.dclk(dclk),
-	.gclk(glk),
-	.deb_clk(debclk)
+  	.segclk(segclk),
+  	.gclk(gclk)
 	);
 
 // 7-segment display controller
@@ -80,14 +69,14 @@ vga640x480 U3(
 	);
 	
 // Debounced inputs
-debouncer clr_debounce(.clk(debclk), .button_in(clr_btn), .button_out(clr));
-debouncer pause_debounce(.clk(ddbclk), .button_in(pause_btn), .button_out(pause));
-debouncer flap_debounce(.clk(debclk), .button_in(flap_btn), .button_out(flap));
+  debouncer clr_debounce(.clk(segclk), .button_in(clr_btn), .button_out(clr));
+  debouncer pause_debounce(.clk(segclk), .button_in(pause_btn), .button_out(pause));
+  debouncer flap_debounce(.clk(segclk), .button_in(flap_btn), .button_out(flap));
 
 //Game module
 game U4(
-	.clk(clk),
-	.flap(flap),
+  	.clk(clk),
+  .flap(flap_btn),
 	.y(y)
 );
 
