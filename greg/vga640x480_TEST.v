@@ -21,6 +21,7 @@
 module vga640x480(
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
+	input wire [9:0] y,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
@@ -149,6 +150,6 @@ begin
 		green = 0;
 		blue = 0;
 	end
-end
+	end
 
 endmodule
