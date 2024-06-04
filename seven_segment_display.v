@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
-module seven_segment_display(
+module segdisplay(
     input game_state,
-    input [9:0] score,
+    input [10:0] score,
     input clk_blink,
     input clk_fast,
     input lost,      // state for if the user has lost
@@ -17,6 +17,7 @@ module seven_segment_display(
                  // count     0    ->  1  ->  2  ->  3
               // activates    LED1    LED2   LED3   LED4
              // and repeat
+    reg [3:0] blink_counter;
     initial 
     begin
         LED_activating_counter = 0;
@@ -28,7 +29,11 @@ module seven_segment_display(
     end
 
     always @(posedge clk_blink) begin
-        blink_counter <= blink_counter + 1;
+        if(blink_counter == 8) begin
+            blink_counter <= 0;
+        end
+        else
+            blink_counter <= blink_counter + 1;
     end
 
     // anode activating signals for 4 LEDs, digit period of 2.6ms
@@ -59,19 +64,19 @@ module seven_segment_display(
             if (Anode_Activate == 4'b0111) begin
                 LED_out = 7'b1111111;
             end else if (Anode_Activate == 4'b1011) begin
-                LED_out = 7'b1001100;
-            end else if (Anode_Activate = 4'b1101) begin
-                LED_out = 7'b1111110;
+                LED_out = 7'b1000100;
+            end else if (Anode_Activate == 4'b1101) begin
+                LED_out = 7'b0000001;
             end else begin
-                LED_out = 7'b0111110;
+                LED_out = 7'b1000001;
             end
         end else if (blink_counter == 2) begin
             // display LOSE
             if (Anode_Activate == 4'b0111) begin
                 LED_out = 7'b1110001;
             end else if (Anode_Activate == 4'b1011) begin
-                LED_out = 7'b1111110;
-            end else if (Anode_Activate = 4'b1101) begin
+                LED_out = 7'b0000001;
+            end else if (Anode_Activate == 4'b1101) begin
                 LED_out = 7'b0100100;
             end else begin
                 LED_out = 7'b0110000;
@@ -93,7 +98,6 @@ module seven_segment_display(
                 default: LED_out = 7'b0000001; // "0"
             endcase
         end
-    end
     end else begin
         case(LED_BCD)
             4'b0000: LED_out = 7'b0000001; // "0"     
@@ -109,6 +113,5 @@ module seven_segment_display(
             default: LED_out = 7'b0000001; // "0"
         endcase
     end
-
- endmodule
- 
+  end
+endmodule
