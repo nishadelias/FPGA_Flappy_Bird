@@ -2,7 +2,7 @@
 
 module seven_segment_display(
     input game_state,
-    input score,
+    input [9:0] score,
     input clk_blink,
     input clk_fast,
     input lost,      // state for if the user has lost
