@@ -2,7 +2,7 @@ module game (
     input clk,                   // Clock input
     input rst,                   // Reset input (not present in your original design - consider adding)
   	input flap,
-    output reg signed [9:0] y    // 10-bit y coordinate output
+    output reg signed [8:0] y    // 9-bit y coordinate output
 );
   
   // Constants
@@ -12,6 +12,10 @@ module game (
   
   // Internal Variables
   reg signed [7:0] velocity = 0;
+
+    initial begin
+        y = INITIAL_Y;
+    end
   
     // Initialize y coordinate
     always @(posedge clk or posedge rst) begin
