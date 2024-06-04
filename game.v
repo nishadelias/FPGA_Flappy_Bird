@@ -2,7 +2,9 @@ module game (
     input clk,                   // Clock input
     input rst,                   // Reset input (not present in your original design - consider adding)
   	input flap,
-    output reg signed [8:0] y    // 9-bit y coordinate output
+    output reg signed [8:0] y,    // 9-bit y coordinate output
+    output reg [8:0] p1,
+    output reg [8:0] p2
 );
   
   // Constants
@@ -12,11 +14,17 @@ module game (
   
   // Internal Variables
   reg signed [7:0] velocity = 0;
+    reg [10:0] count;
+    reg [4:0] pillars;
 
     initial begin
-        y = INITIAL_Y;
+        y <= INITIAL_Y;
+        count <= 0;
+        pillars <= 0;
+        p1 <= 0;
+        p2 <= 0;
     end
-  
+
     // Initialize y coordinate
     always @(posedge clk or posedge rst) begin
       if (rst) begin
@@ -44,5 +52,36 @@ module game (
           y <= y + velocity;
         end
       end
+    end
+
+    always @(posedge clk) begin
+        if (rst) begin
+            count <= 0;
+        end else begin
+            if (count == 2000) begin
+                count <= 0;
+            end else begin
+                count <= count + 1;
+            end
+        end
+
+        pillars <= count/200;    // increases every 4 seconds
+        case (pillars)
+            0: p1 <= 240;
+            1: p2 <= 300;
+            2: p1 <= 250;
+            3: p2 <= 150;
+            4: p1 <= 400;
+            5: p2 <= 320;
+            6: p1 <= 200;
+            7: p2 <= 180;
+            8: p1 <= 260;
+            9: p2 <= 350;
+            default: begin
+                p1 <= 0;
+                p2 <= 0;
+            end
+        endcase
+    
     end
 endmodule
