@@ -47,6 +47,8 @@ wire [9:0] current_score;
 wire [9:0] highest_score;
 wire [9:0] bird_x;
 wire [8:0] bird_y;
+wire [8:0] pillar1;
+wire [8:0] pillar2;
 
 // disable the 7-segment decimal points
 assign dp = 1;
@@ -88,7 +90,9 @@ game U4(
 	.clk(clk_game),  // 50 Hz
 	.rst(reset),
 	.flap(flap_button),
-	.y(bird_y)
+	.y(bird_y),
+	.p1(pillar1),
+	.p2(pillar2)
 );
 
 initial begin
