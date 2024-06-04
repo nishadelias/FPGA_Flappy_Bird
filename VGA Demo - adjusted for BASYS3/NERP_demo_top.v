@@ -30,7 +30,9 @@ module NERP_demo_top(
 	output wire [2:0] green,//green vga output - 3 bits
 	output wire [2:0] blue,	//blue vga output - 3 bits
 	output wire hsync,		//horizontal sync out
-	output wire vsync //vertical sync out
+	output wire vsync, //vertical sync out
+	output wire [6:0] Anode_Activate,
+	output wire [3:0] LED_out
 	//output wire dclk
 	);
 
@@ -50,8 +52,6 @@ wire [8:0] pillar1;
 wire [8:0] pillar2;
 
 wire lost = 1;
-wire [6:0] Anode_Activate;
-wire [3:0] LED_out;
 
 
 // disable the 7-segment decimal points
