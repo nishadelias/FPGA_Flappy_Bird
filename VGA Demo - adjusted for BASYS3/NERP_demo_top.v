@@ -52,6 +52,7 @@ wire [8:0] pillar1;
 wire [8:0] pillar2;
 
 wire lost = 1;
+wire [9:0] score = 52;
 
 
 // disable the 7-segment decimal points
