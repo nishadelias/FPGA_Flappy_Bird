@@ -45,8 +45,7 @@ reg reset;
 wire game_state;
 wire [9:0] current_score;
 wire [9:0] highest_score;
-wire [9:0] bird_x;
-wire [8:0] bird_y;
+wire [9:0] bird_y;
 wire [8:0] pillar1;
 wire [8:0] pillar2;
 
