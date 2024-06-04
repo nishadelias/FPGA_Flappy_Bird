@@ -75,7 +75,6 @@ segdisplay U2(
 vga640x480 U3(
 	.dclk(dclk),
 	.clr(clr),
-	.bird_x(bird_x),
 	.bird_y(bird_y),
 	.game_state(game_state),
 	.hsync(hsync),
@@ -86,15 +85,10 @@ vga640x480 U3(
 	);
 
 game U4(
-	.clock(clk_game),  // 50 Hz
-	.flap(flap_button),
-	.pause(paused),
-	.reset(reset),
-	.game_state(game_state),
-	.current_score(current_score),
-	.highest_score(highest_score),
-	.bird_x(bird_x),
-	.bird_y(bird_y)
+	.clk(clk_game),  // 50 Hz
+	.rst(reset),
+	.flap(flap_button)
+	.y(bird_y)
 );
 
 initial begin
