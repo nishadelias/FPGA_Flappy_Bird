@@ -1,76 +1,44 @@
-module game(
-  input clock,  // 50 Hz
-  input flap,
-  input pause,
-  input reset,
-  output wire game_state,
-  output wire [9:0] current_score,
-  output wire [9:0] highest_score,
-  output wire [9:0] bird_x,
-  output wire [8:0] bird_y
+module game (
+    input clk,                   // Clock input
+    input rst,                   // Reset input (not present in your original design - consider adding)
+  	input flap,
+    output reg signed [9:0] y    // 10-bit y coordinate output
 );
-
-reg gs;
-reg [9:0] curr_score;
-reg[9:0] high_score;
-reg[9:0] x;
-reg[8:0] y;
-
-  reg [6:0] velocity;
-  reg positive;    // keep track of whether the velocity is positive or negative
-
-  initial begin
-    gs <= 0;
-    curr_score <= 0;
-    high_score <= 0;
-    x <= 140;
-    y <= 280;
-    velocity <= 0;
-    positive <= 1;
-  end
-
-  always @(*) begin
-    if (reset) begin
-      gs <= 0;
-      curr_score <= 0;
-      high_score <= 0;
-      x <= 140;
-      y <= 280;
-      velocity <= 0;
-      positive <= 1;
-    end else if (!pause) begin
-      if (!gs && flap) begin
-        gs <= 1;
-        velocity <= 10;
-      end else if (gs && !flap) begin
-        if (velocity == 0) begin
-          positive <= 0;
-          velocity <= velocity + 1;
+  
+  // Constants
+  localparam signed [7:0] GRAVITY = -1; // Gravity pulls down, so it should decrease velocity
+  localparam signed [9:0] INITIAL_Y = 240; // Starting y position
+  localparam signed [7:0] FLAP_VELOCITY = 4; // Velocity impulse from a flap
+  
+  // Internal Variables
+  reg signed [7:0] velocity = 0;
+  
+    // Initialize y coordinate
+    always @(posedge clk or posedge rst) begin
+      if (rst) begin
+        y <= INITIAL_Y; // Reset to initial y position
+        velocity <= 0;  // Reset velocity to zero
+      end else if (flap && y > 0 && y < 480) begin
+        // Flapping gives an upward velocity impulse
+        velocity <= FLAP_VELOCITY;
+        y <= y + velocity; // Apply the velocity immediately to simulate impulse
+      end else begin
+        // Gravity continuously affects velocity
+        velocity <= velocity + GRAVITY;
+        
+        // Update position based on velocity, but ensure it stays within bounds
+        if (y + velocity < 0) begin
+          // If bird hits the ground, stop its movement
+          velocity <= 0;
+          y <= 0;
+        end else if (y + velocity > 480) begin
+          // If bird goes above the screen, stop its upward movement
+          velocity <= 0;
+          y <= 480;
         end else begin
-          velocity <= velocity - 1;
-        end
-      end else if(game_state && flap) begin
-        velocity <= 10;
-        positive <= 1;
-      end
-
-      if (gs) begin
-        if (positive && y < 465) begin
+          // Normal case, update bird's y position
           y <= y + velocity;
-        end else if (!positive && y > 40) begin
-          y <= y - velocity;
         end
       end
     end
-   
-    
-
-  end
-  
-  assign game_state = gs;
-  assign current_score = curr_score;
-  assign highest_score = high_score;
-  assign bird_x = x;
-  assign bird_y = y;
-
 endmodule
