@@ -7,10 +7,6 @@ module game (
     output reg [8:0] p2
 );
   
-  // Constants
-  localparam signed [7:0] GRAVITY = -1; // Gravity pulls down, so it should decrease velocity
-  localparam signed [9:0] INITIAL_Y = 240; // Starting y position
-  localparam signed [7:0] FLAP_VELOCITY = 4; // Velocity impulse from a flap
   
   // Internal Variables
   reg signed [7:0] velocity = 0;
@@ -18,7 +14,7 @@ module game (
     reg [4:0] pillars;
 
     initial begin
-        y <= INITIAL_Y;
+        y <= 240;
         count <= 0;
         pillars <= 0;
         p1 <= 0;
@@ -28,15 +24,15 @@ module game (
     // Initialize y coordinate
     always @(posedge clk or posedge rst) begin
       if (rst) begin
-        y <= INITIAL_Y; // Reset to initial y position
+        y <= 240; // Reset to initial y position
         velocity <= 0;  // Reset velocity to zero
       end else if (flap && y > 0 && y < 480) begin
         // Flapping gives an upward velocity impulse
-        velocity <= FLAP_VELOCITY;
+        velocity <= 4;
         y <= y + velocity; // Apply the velocity immediately to simulate impulse
       end else begin
         // Gravity continuously affects velocity
-        velocity <= velocity + GRAVITY;
+          velocity <= velocity + (-1);
         
         // Update position based on velocity, but ensure it stays within bounds
         if (y + velocity < 0) begin
