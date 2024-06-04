@@ -42,12 +42,17 @@ wire dclk;
 wire clk_blink;
 wire clk_game;
 reg reset;
-wire game_state;
+wire game_state = 0;
 wire [9:0] current_score;
 wire [9:0] highest_score;
 wire [9:0] bird_y;
 wire [8:0] pillar1;
 wire [8:0] pillar2;
+
+wire lost = 1;
+wire [6:0] Anode_Activate;
+wire [3:0] LED_out;
+
 
 // disable the 7-segment decimal points
 assign dp = 1;
@@ -65,11 +70,14 @@ clockdiv U1(
 	);
 
 // 7-segment display controller
-segdisplay U2(
-	.segclk(segclk),
-	.clr(clr),
-	.seg(seg),
-	.an(an)
+seven_segment_display U2(
+	.game_state(game_state),
+	.score(score),
+	.clk_blink(clk_blink),
+	.clk_fast(segclk),
+	.lost(lost),      // state for if the user has lost
+	.Anode_Activate(Anode_Activate),
+	.LED_out(LED_out)
 	);
 
 // VGA controller
