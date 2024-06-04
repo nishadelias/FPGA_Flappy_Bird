@@ -2,9 +2,9 @@ module game (
     input clk,                   // Clock input
     input rst,                   // Reset input (not present in your original design - consider adding)
   	input flap,
-    output reg signed [8:0] y,    // 9-bit y coordinate output
-    output reg [8:0] p1,
-    output reg [8:0] p2
+    output reg signed [9:0] y,    // 9-bit y coordinate output
+    output reg [9:0] p1,
+    output reg [9:0] p2
 );
   
   
