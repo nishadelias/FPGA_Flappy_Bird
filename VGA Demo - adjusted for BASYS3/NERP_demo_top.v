@@ -87,7 +87,7 @@ vga640x480 U3(
 game U4(
 	.clk(clk_game),  // 50 Hz
 	.rst(reset),
-	.flap(flap_button)
+	.flap(flap_button),
 	.y(bird_y)
 );
 
