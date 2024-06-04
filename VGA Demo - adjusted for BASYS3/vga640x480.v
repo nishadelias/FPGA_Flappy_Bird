@@ -21,8 +21,7 @@
 module vga640x480(
 	input wire dclk,			//pixel clock: 25MHz
 	input wire clr,			//asynchronous reset
-	input bird_x,
-	input bird_y,
+	input [8:0] bird_y,
 	input game_state,
 	output wire hsync,		//horizontal sync out
 	output wire vsync,		//vertical sync out
@@ -40,6 +39,8 @@ parameter hbp = 144; 	// end of horizontal back porch
 parameter hfp = 784; 	// beginning of horizontal front porch
 parameter vbp = 31; 		// end of vertical back porch
 parameter vfp = 511; 	// beginning of vertical front porch
+
+parameter bird_x = 200;
 // active horizontal video is therefore: 784 - 144 = 640
 // active vertical video is therefore: 511 - 31 = 480
 
