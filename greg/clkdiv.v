@@ -15,9 +15,11 @@ module clockdiv(
   reg dclk_reg;
   reg segclk_reg;
   reg gclk_reg;
-  parameter DIVISOR_dclk = 28'd4; //TESTBENCH VALUESS!!!!!!!!!
-  parameter DIVISOR_segclk = 28'd10;
-  parameter DIVISOR_gclk = 28'd10;
+  parameter DIVISOR_dclk = 28'd2; //TESTBENCH VALUESS!!!!!!!!!
+  parameter DIVISOR_segclk = 28'd100000;
+  parameter DIVISOR_gclk = 28'd1000000;
+//  parameter DIVISOR_segclk = 28'd10;
+//  parameter DIVISOR_gclk = 28'd10;
 
  initial begin
  counter_dclk <= 0;
@@ -31,7 +33,7 @@ module clockdiv(
 // Clock divider --
 // Each bit in q is a clock signal that is
 // only a fraction of the master clock.
-always @(posedge clk or posedge clr)
+always @(posedge clk)
 begin
 	// reset condition
   if (clr == 1) begin
